@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.description = 'Rhetor is yet another lexical analyser library
                         written in pure Ruby with no runtime dependencies,
                         properly documented and easy-to-use.'
-  spec.homepage = ''
+  spec.homepage = 'https://github.com/edubenetskiy/rhetor/'
   spec.license = 'MIT'
 
   spec.files = `git ls-files -z`.split("\x0")
