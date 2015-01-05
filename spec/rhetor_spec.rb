@@ -10,10 +10,17 @@ describe Rhetor do
       end
     end
 
+    it 'returns an empty array being called with an empty string' do
+      expect(analyser.analyse '').to eq []
+    end
+
+    it 'returns an empty array if ignores anything' do
+      analyser.ignore(/.+/)
+      expect(analyser.analyse 'something anything').to eq []
+    end
+
     it 'does not recognize an improper string' do
-      expect do
-        analyser.analyse 'something'
-      end.to raise_error(UnmatchedString)
+      expect { analyser.analyse 'something' }.to raise_error(UnmatchedString)
     end
 
     it 'recognizes a single keyword' do

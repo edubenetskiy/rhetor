@@ -90,8 +90,8 @@ module Rhetor
     #
     def next_token
       fail NoStringLoaded unless @string
-      return EOF_TOKEN if @position >= @size
       @position = skip_ignored(@string, @position)
+      return EOF_TOKEN if @position >= @size
       name, length = string_pattern(@string, @position)
       name, length = regexp_pattern(@string, @position) if length == 0
       fail UnmatchedString, "at position #{@position}" if length == 0
@@ -108,7 +108,10 @@ module Rhetor
     def analyse(string)
       begin_analysis(string)
       tokens = []
-      tokens << next_token while @position < @size
+      loop do
+        last_token = next_token
+        (last_token == EOF_TOKEN) ? break : tokens << last_token
+      end
       tokens
     end
 
