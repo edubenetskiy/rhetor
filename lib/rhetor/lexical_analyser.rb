@@ -42,7 +42,9 @@ module Rhetor
       @used_names = []
       @string = nil
       @position = nil
-      block.arity == 1 ? block.call(self) : instance_eval(&block)
+      if block_given?
+        block.arity == 1 ? block.call(self) : instance_eval(&block)
+      end
     end
 
     # Makes the analyser to recognize some pattern
