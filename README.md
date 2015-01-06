@@ -3,7 +3,7 @@
 [![GitHub](https://img.shields.io/badge/github-edubenetskiy/rhetor-orange.svg)](https://github.com/edubenetskiy/rhetor)
 [![Documentation](http://img.shields.io/badge/docs-rdoc.info-blue.svg)](http://www.rubydoc.info/gems/rhetor/frames)
 [![Gem Version](https://badge.fury.io/rb/rhetor.svg)](https://github.com/edubenetskiy/rhetor/releases)
-[![License](https://img.shields.io/packagist/l/doctrine/orm.svg)](LICENSE.txt)
+[![License](https://img.shields.io/packagist/l/doctrine/orm.svg)](#license)
 
 Rhetor is yet another lexical analyser library written in pure Ruby
 with no runtime dependencies. It is properly documented and easy-to-use.
@@ -71,3 +71,6 @@ end
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
+
+## License
+Rhetor © 2015 by Egor Dubenetskiy. Rhetor is licensed under the MIT license. Please see LICENSE.txt for further details.
