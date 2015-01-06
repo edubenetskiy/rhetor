@@ -1,7 +1,8 @@
 # Rhetor
 
 [![GitHub](https://img.shields.io/badge/github-edubenetskiy/rhetor-orange.svg)](https://github.com/edubenetskiy/rhetor)
-[![Documentation](http://img.shields.io/badge/docs-rdoc.info-blue.svg)](http://www.rubydoc.info/gems/rhetor/frames)
+[![Dependency Status](https://gemnasium.com/edubenetskiy/rhetor.svg)](https://gemnasium.com/edubenetskiy/rhetor)
+[![Documentation](https://img.shields.io/badge/docs-rdoc.info-blue.svg)](http://www.rubydoc.info/gems/rhetor/frames)
 [![Gem Version](https://badge.fury.io/rb/rhetor.svg)](https://github.com/edubenetskiy/rhetor/releases)
 [![License](https://img.shields.io/packagist/l/doctrine/orm.svg)](#license)
 
