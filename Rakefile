@@ -15,8 +15,7 @@ namespace :test do
   task 'coverage' do
     ENV['COVERAGE'] = 'true'
     rm_rf 'coverage/'
-    spec.reenable
-    spec.invoke
+    Rake::Task['test:spec'].invoke
   end
 end
 
