@@ -29,39 +29,58 @@ Or install it yourself as:
 ```ruby
 # Define behaviour
 lexer = Rhetor::LexicalAnalyser.new do
+  # Within this block you can define your own rules, your own patterns
+  # to recognize. You can call these methods out of this block
+  # like this: lexer.rule(...), it also works.
   rule '+', :plus
   rule '-', :minus
   rule '*', :asterisk
   rule '/', :solidus
   rule '(', :left_parenthesis
   rule ')', :right_parenthesis
-  rule /[-+]?[0-9]*\.?[0-9]+/, :number
-  ignore /\s+/
+
+  # This rule will return tokens with floating-point values.
+  # Actually, you can make Rhetor to return tokens with any types of values,
+  # you only have to provide an evaluator - a block which receives a matched
+  # substring and returns the desired value. Like here:
+  rule(/[-+]?[0-9]*\.?[0-9]+/, :number) { |string| string.to_f }
+
+  # Here we make Rhetor to ignore whitespaces via the regular expression:
+  ignore(/\s+/)
+  # We could also do it with a string: ignore ' ',
+  # but regular expressions are more powerful.
 end
 
-# Iterate through tokens
-lexer.analyse('2 + 2 * 2 - (25 / (3 + 70 / 4))').each do |token|
-  puts "#{token.name.to_s.rjust(20)}: #{token.string.center(3)} [#{token.position}]"
+# Analyse method returns an array of tokens. You can provide a block
+# and it will be run for each of encountered tokens.
+tokens = lexer.analyse('2 + 2 * 2 - (25 / (3 + 70 / 4))') do |token|
+  puts token
 end
-
 # It produces:
-#               number:  2  [0]
-#                 plus:  +  [2]
-#               number:  2  [4]
-#             asterisk:  *  [6]
-#               number:  2  [8]
-#                minus:  -  [10]
-#     left_parenthesis:  (  [12]
-#               number: 25  [13]
-#              solidus:  /  [16]
-#     left_parenthesis:  (  [18]
-#               number:  3  [19]
-#                 plus:  +  [21]
-#               number: 70  [23]
-#              solidus:  /  [26]
-#               number:  4  [28]
-#    right_parenthesis:  )  [29]
-#    right_parenthesis:  )  [30]
+# (number: 2.0 [0,1])
+# (plus: "+" [2,1])
+# (number: 2.0 [4,1])
+# (asterisk: "*" [6,1])
+# (number: 2.0 [8,1])
+# (minus: "-" [10,1])
+# (left_parenthesis: "(" [12,1])
+# (number: 25.0 [13,2])
+# (solidus: "/" [16,1])
+# (left_parenthesis: "(" [18,1])
+# (number: 3.0 [19,1])
+# (plus: "+" [21,1])
+# (number: 70.0 [23,2])
+# (solidus: "/" [26,1])
+# (number: 4.0 [28,1])
+# (right_parenthesis: ")" [29,1])
+# (right_parenthesis: ")" [30,1])
+
+# Now get information about any of the tokens:
+token = tokens.first # => (number: 2.0 [0,1])
+token.value          # => 2.0
+token.name           # => :number
+token.position       # => 0
+token.length         # => 1
 ```
 
 ## Contributing
