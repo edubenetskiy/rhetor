@@ -79,5 +79,22 @@ describe Rhetor do
          Token.new('key', :key, 5, 3),
          Token.new('keyword', :keyword, 9, 7)]
     end
+
+    it 'executes a passed block' do
+      expect do |b|
+        analyser.analyse('wordkeykeyword', &b)
+      end.to yield_successive_args(Token.new('word', :word, 0, 4),
+                                   Token.new('key', :key, 4, 3),
+                                   Token.new('keyword', :keyword, 7, 7))
+    end
+  end
+  describe Token do
+    describe '#to_s' do
+      it 'returns a string representation of the token' do
+        expect(
+            Token.new('value', :name, 0, 42).to_s
+        ).to eq '(name: "value" [0,42])'
+      end
+    end
   end
 end

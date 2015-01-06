@@ -1,12 +1,19 @@
 module Rhetor
   # Token class represents tokens matched from the input.
   #
-  # @attr_reader [String] string the part of string that was encountered
+  # @attr_reader [Object] value the value of the token
   # @attr_reader [Symbol] name the name of the matched rule
-  # @attr_reader [Integer] position the position of the substring
-  # @attr_reader [Integer] length the length of the substring
+  # @attr_reader [Integer] position the position of the matched substring
+  # @attr_reader [Integer] length the length of the matched substring
   #
-  Token = Struct.new :string, :name, :position, :length
+  Token = Struct.new :value, :name, :position, :length do
+    def to_s
+      "(#{name}: #{value.inspect} [#{position},#{length}])"
+      # "<(#{name}) #{value} [#{position}, #{length}]>"
+    end
+
+    alias_method :inspect, :to_s
+  end
 
   EOF_TOKEN = Token.new(nil, nil, -1, nil)
 
@@ -24,7 +31,7 @@ module Rhetor
     attr_reader :string, :position
 
     # Creates a new lexical analyser and evaluates the passed block within it
-    # @param &block [Block] the block to be executed
+    # @param block [Block] the block to be executed
     # @example Creating a simple HQ9+ parser
     #   lexer = Rhetor::LexicalAnalyser.new {
     #     rule 'H', :hello_world
@@ -40,6 +47,7 @@ module Rhetor
       @regexp_patterns = {}
       @ignored = []
       @used_names = []
+      @evaluator = {}
       @string = nil
       @position = nil
       (block.arity == 1) ? block[self] : instance_eval(&block) if block_given?
@@ -48,16 +56,20 @@ module Rhetor
     # Makes the analyser to recognize some pattern
     # @param pattern [String, Regexp] the pattern
     # @param name [Symbol] the name of the rule
+    # @param evaluator [Proc,nil] a proc. This proc will be called
+    #   if the pattern is encountered. It receives a matched substring
+    #   and calculates the value of the corresponding token. If this
+    #   argument is omitted, the value of the token will coincide
+    #   with the matched substring.
     # @raise [InvalidPattern] if the pattern is not valid
     # @raise [InvalidRuleName] unless the name of the rule is a symbol
     # @raise [RuleAlreadyExists] if the rule with the same name already exists
     # @return [void]
     #
-    def rule(pattern, name)
-      fail InvalidPattern unless [String, Regexp].include? pattern.class
-      fail InvalidRuleName unless name.is_a? Symbol
-      fail RuleAlreadyExists if @used_names.include? name
+    def rule(pattern, name, &evaluator)
+      check_rule(pattern, name)
       @used_names.push name
+      @evaluator[name] = evaluator
       array_name = "@#{pattern.class.name.downcase}_patterns".intern
       instance_variable_get(array_name)[name] = pattern
     end
@@ -93,27 +105,40 @@ module Rhetor
       name, length = string_pattern(@string, @position)
       name, length = regexp_pattern(@string, @position) if length == 0
       fail UnmatchedString, "at position #{@position}" if length == 0
-      token = Rhetor::Token.new(@string[@position, length],
-                                name, @position, length)
+      token = make_token(name, @position, length)
       @position += length
       token
     end
 
     # Analyzes the given string
     # @param string [String] the string to be analyzed
+    # @yieldparam token [Token] every encountered token
     # @return [Array<Token>] the array of encountered tokens
     #
-    def analyse(string)
+    def analyse(string, &block)
       begin_analysis(string)
       tokens = []
       loop do
         last_token = next_token
         (last_token == EOF_TOKEN) ? break : tokens << last_token
+        block.call(last_token) if block_given?
       end
       tokens
     end
 
     private
+
+    def make_token(name, position, size)
+      substring = @string[position, size]
+      value = @evaluator[name] ? @evaluator[name].call(substring) : substring
+      Rhetor::Token.new(value, name, position, size)
+    end
+
+    def check_rule(pattern, name)
+      fail InvalidPattern unless [String, Regexp].include? pattern.class
+      fail InvalidRuleName unless name.is_a? Symbol
+      fail RuleAlreadyExists if @used_names.include? name
+    end
 
     def string_pattern(string, position)
       results = @string_patterns.map do |name, pattern|
@@ -136,10 +161,9 @@ module Rhetor
     end
 
     def matched_size(pattern, string, position)
-      case pattern
-      when String
+      if pattern.is_a? String
         (string[position, pattern.size] == pattern) ? pattern.size : 0
-      when Regexp
+      elsif pattern.is_a? Regexp
         md = string.match(pattern, position)
         return 0 unless md
         md.begin(0) == position ? md[0].size : 0
