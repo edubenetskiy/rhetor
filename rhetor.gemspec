@@ -14,6 +14,7 @@ Gem::Specification.new do |spec|
                         properly documented and easy-to-use.'
   spec.homepage = 'https://github.com/edubenetskiy/rhetor/'
   spec.license = 'MIT'
+  spec.required_ruby_version = '>= 1.9.3'
 
   spec.files = `git ls-files -z`.split("\x0")
   spec.executables = spec.files.grep(/^bin\//) { |f| File.basename(f) }
