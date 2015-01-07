@@ -1,11 +1,14 @@
 # Rhetor
 
-[![GitHub](https://img.shields.io/badge/github-edubenetskiy/rhetor-orange.svg)](https://github.com/edubenetskiy/rhetor)
-[![Dependency Status](https://gemnasium.com/edubenetskiy/rhetor.svg)](https://gemnasium.com/edubenetskiy/rhetor)
+[![GitHub](https://img.shields.io/badge/github-edubenetskiy/rhetor-blue.svg)](https://github.com/edubenetskiy/rhetor)
 [![Documentation](https://img.shields.io/badge/docs-rdoc.info-blue.svg)](http://www.rubydoc.info/gems/rhetor/frames)
+[![License](https://img.shields.io/packagist/l/doctrine/orm.svg)](#license)
+
+[![Dependency Status](https://gemnasium.com/edubenetskiy/rhetor.svg)](https://gemnasium.com/edubenetskiy/rhetor)
+[![Coverage Status](https://img.shields.io/coveralls/edubenetskiy/rhetor.svg)](https://coveralls.io/r/edubenetskiy/rhetor?branch=master)
 [![Build Status](https://api.travis-ci.org/edubenetskiy/rhetor.svg?branch=master)](https://travis-ci.org/edubenetskiy/rhetor)
 [![Gem Version](https://badge.fury.io/rb/rhetor.svg)](https://github.com/edubenetskiy/rhetor/releases)
-[![License](https://img.shields.io/packagist/l/doctrine/orm.svg)](#license)
+
 
 Rhetor is yet another lexical analyser library written in pure Ruby
 with no runtime dependencies. It is properly documented and easy-to-use.
