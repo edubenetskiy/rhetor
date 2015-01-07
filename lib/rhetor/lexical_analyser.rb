@@ -9,7 +9,6 @@ module Rhetor
   Token = Struct.new :value, :name, :position, :length do
     def to_s
       "(#{name}: #{value.inspect} [#{position},#{length}])"
-      # "<(#{name}) #{value} [#{position}, #{length}]>"
     end
 
     alias_method :inspect, :to_s
