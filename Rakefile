@@ -19,4 +19,4 @@ namespace :test do
   end
 end
 
-task default: 'test:run'
+task default: 'test:spec'
