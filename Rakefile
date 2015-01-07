@@ -7,16 +7,6 @@ require 'inch/rake'
 Inch::Rake::Suggest.new
 YARD::Rake::YardocTask.new
 RuboCop::RakeTask.new
+RSpec::Core::RakeTask.new('spec')
 
-namespace :test do
-  RSpec::Core::RakeTask.new('spec')
-
-  desc 'Run all test suites with code coverage detail'
-  task 'coverage' do
-    ENV['COVERAGE'] = 'true'
-    rm_rf 'coverage/'
-    Rake::Task['test:spec'].invoke
-  end
-end
-
-task default: %w(test:spec rubocop)
+task default: %w(spec rubocop)
