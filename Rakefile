@@ -19,4 +19,4 @@ namespace :test do
   end
 end
 
-task default: 'test:spec'
+task default: %w(test:spec rubocop)
