@@ -31,15 +31,15 @@ describe Rhetor do
     it 'recognizes a single pattern' do
       analyser.rule(/\w+/, :custom_word)
       expect(analyser.analyse 'something').to eq \
-      [Token.new('something', :custom_word, 0, 9)]
+        [Token.new('something', :custom_word, 0, 9)]
     end
 
     it 'recognizes a sequence of patterns and keywords' do
       analyser.rule(/\w+/, :custom_word)
       analyser.ignore(/\s+/)
       expect(analyser.analyse 'some word').to eq \
-      [Token.new('some', :custom_word, 0, 4),
-       Token.new('word', :word, 5, 4)]
+        [Token.new('some', :custom_word, 0, 4),
+         Token.new('word', :word, 5, 4)]
     end
 
     it 'takes only the longest token of several overlapped tokens' do
@@ -86,15 +86,6 @@ describe Rhetor do
       end.to yield_successive_args(Token.new('word', :word, 0, 4),
                                    Token.new('key', :key, 4, 3),
                                    Token.new('keyword', :keyword, 7, 7))
-    end
-  end
-  describe Token do
-    describe '#to_s' do
-      it 'returns a string representation of the token' do
-        expect(
-            Token.new('value', :name, 0, 42).to_s
-        ).to eq '(name: "value" [0,42])'
-      end
     end
   end
 end
