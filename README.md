@@ -15,6 +15,12 @@
 Rhetor is yet another lexical analyser library written in pure Ruby
 with no runtime dependencies. It is properly documented and easy-to-use.
 
+## Resurgence of Rhetor
+
+**The project is staying alive!** In a week or two a brand-new version of Rhetor
+will be eventually released. Single-phase *syntactic analysis* with feature-rich
+but simple API is coming soon. Keep in touch!
+
 ## Installation
 
 Add this line to your application's Gemfile:
