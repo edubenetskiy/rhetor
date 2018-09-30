@@ -35,7 +35,9 @@ module Rhetor
       @evaluator = {}
       @string = nil
       @position = nil
-      (block.arity == 1) ? block[self] : instance_eval(&block) if block_given?
+      return unless block_given?
+
+      block.arity == 1 ? block[self] : instance_eval(&block)
     end
 
     # Makes the analyser to recognize some pattern
@@ -64,7 +66,8 @@ module Rhetor
     # @return [void]
     #
     def ignore(pattern)
-      fail InvalidPattern unless [String, Regexp].include? pattern.class
+      raise InvalidPattern unless [String, Regexp].include? pattern.class
+
       @ignored.push pattern unless @ignored.include? pattern
     end
 
@@ -73,7 +76,8 @@ module Rhetor
     # @return [void]
     #
     def begin_analysis(string)
-      fail InvalidString unless string.is_a? String
+      raise InvalidString unless string.is_a? String
+
       @string = string
       @position = 0
       @size = string.size
@@ -84,12 +88,15 @@ module Rhetor
     # @raise [UnmatchedString] if the analyser is unable to get the next token
     #
     def next_token
-      fail NoStringLoaded unless @string
+      raise NoStringLoaded unless @string
+
       @position = skip_ignored(@string, @position)
       return EOF_TOKEN if @position >= @size
+
       name, length = string_pattern(@string, @position)
-      name, length = regexp_pattern(@string, @position) if length == 0
-      fail UnmatchedString, "at position #{@position}" if length == 0
+      name, length = regexp_pattern(@string, @position) if length.zero?
+      raise UnmatchedString, "at position #{@position}" if length.zero?
+
       token = make_token(name, @position, length)
       @position += length
       token
@@ -100,13 +107,13 @@ module Rhetor
     # @yieldparam token [Token] every encountered token
     # @return [Array<Token>] the array of encountered tokens
     #
-    def analyse(string, &block)
+    def analyse(string)
       begin_analysis(string)
       tokens = []
       loop do
         last_token = next_token
-        (last_token == EOF_TOKEN) ? break : tokens << last_token
-        block.call(last_token) if block_given?
+        last_token == EOF_TOKEN ? break : tokens << last_token
+        yield last_token if block_given?
       end
       tokens
     end
@@ -120,9 +127,9 @@ module Rhetor
     end
 
     def check_rule(pattern, name)
-      fail InvalidPattern unless [String, Regexp].include? pattern.class
-      fail InvalidRuleName unless name.is_a? Symbol
-      fail RuleAlreadyExists if @used_names.include? name
+      raise InvalidPattern unless [String, Regexp].include? pattern.class
+      raise InvalidRuleName unless name.is_a? Symbol
+      raise RuleAlreadyExists if @used_names.include? name
     end
 
     def string_pattern(string, position)
@@ -147,10 +154,11 @@ module Rhetor
 
     def matched_size(pattern, string, position)
       if pattern.is_a? String
-        (string[position, pattern.size] == pattern) ? pattern.size : 0
+        string[position, pattern.size] == pattern ? pattern.size : 0
       elsif pattern.is_a? Regexp
         md = string.match(pattern, position)
         return 0 unless md
+
         md.begin(0) == position ? md[0].size : 0
       end
     end

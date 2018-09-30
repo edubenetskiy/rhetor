@@ -11,12 +11,12 @@ describe Rhetor do
     end
 
     it 'returns an empty array being called with an empty string' do
-      expect(analyser.analyse '').to eq []
+      expect(analyser.analyse('')).to eq []
     end
 
     it 'returns an empty array if ignores anything' do
       analyser.ignore(/.+/)
-      expect(analyser.analyse 'something anything').to eq []
+      expect(analyser.analyse('something anything')).to eq []
     end
 
     it 'does not recognize an improper string' do
@@ -24,31 +24,31 @@ describe Rhetor do
     end
 
     it 'recognizes a single keyword' do
-      expect(analyser.analyse 'word').to eq [Token.new('word', :word, 0, 4)]
-      expect(analyser.analyse 'key').to eq [Token.new('key', :key, 0, 3)]
+      expect(analyser.analyse('word')).to eq [Token.new('word', :word, 0, 4)]
+      expect(analyser.analyse('key')).to eq [Token.new('key', :key, 0, 3)]
     end
 
     it 'recognizes a single pattern' do
       analyser.rule(/\w+/, :custom_word)
-      expect(analyser.analyse 'something').to eq \
+      expect(analyser.analyse('something')).to eq \
         [Token.new('something', :custom_word, 0, 9)]
     end
 
     it 'recognizes a sequence of patterns and keywords' do
       analyser.rule(/\w+/, :custom_word)
       analyser.ignore(/\s+/)
-      expect(analyser.analyse 'some word').to eq \
+      expect(analyser.analyse('some word')).to eq \
         [Token.new('some', :custom_word, 0, 4),
          Token.new('word', :word, 5, 4)]
     end
 
     it 'takes only the longest token of several overlapped tokens' do
-      expect(analyser.analyse 'keyword').to eq \
+      expect(analyser.analyse('keyword')).to eq \
         [Token.new('keyword', :keyword, 0, 7)]
     end
 
     it 'recognizes several consecutive keywords' do
-      expect(analyser.analyse 'wordkeykeyword').to eq \
+      expect(analyser.analyse('wordkeykeyword')).to eq \
         [Token.new('word', :word, 0, 4),
          Token.new('key', :key, 4, 3),
          Token.new('keyword', :keyword, 7, 7)]
@@ -74,7 +74,7 @@ describe Rhetor do
 
     it 'skips specified patterns' do
       analyser.ignore(/\s+/)
-      expect(analyser.analyse 'word key keyword').to eq \
+      expect(analyser.analyse('word key keyword')).to eq \
         [Token.new('word', :word, 0, 4),
          Token.new('key', :key, 5, 3),
          Token.new('keyword', :keyword, 9, 7)]

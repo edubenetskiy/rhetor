@@ -9,4 +9,4 @@ YARD::Rake::YardocTask.new
 RuboCop::RakeTask.new
 RSpec::Core::RakeTask.new('spec')
 
-task default: %w(spec rubocop)
+task default: %w[spec rubocop]
