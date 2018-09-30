@@ -2,6 +2,10 @@
 
 ## master (unreleased)
 
+## 0.2.0 (2018-09-30)
+
+No changes. This release was intented just to re-upload the gem to Rubygems.org.
+
 ## 0.1.0 (2015-01-06)
 
 ### New features
