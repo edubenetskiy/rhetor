@@ -1,5 +1,12 @@
 require: rubocop-rspec
+AllCops:
+  TargetRubyVersion: 2.2
 Style/Documentation:
   Enabled: false
-Style/AccessorMethodName:
+Naming/AccessorMethodName:
   Enabled: false
+Metrics/BlockLength:
+  Exclude:
+    - 'Rakefile'
+    - '**/*.rake'
+    - 'spec/**/*.rb'
